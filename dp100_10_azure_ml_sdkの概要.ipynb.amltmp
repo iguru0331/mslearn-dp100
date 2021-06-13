@@ -1,0 +1,1294 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# 10.Azure ML SDKの概要\n",
+        "\n",
+        "## Azure Machine Learning ワークスペース\n",
+        "\n",
+        "ワークスペースは、機械学習ワークロードに関連付けられた実験、データ、コンピューティング先およびその他の資産のコンテキスト。\n",
+        "\n",
+        "### Machine Learning資産用のワークスペース\n",
+        "\n",
+        "ワークスペースは、関連する一連の機械学習リソースの境界を定義するもの。  \n",
+        "ワークスペースを使用することで、プロジェクト、デプロイ環境(テストと運用など)、チーム、またはその他の編成の原則に基づいて機械学習リソースをグループ化できる。\n",
+        "\n",
+        "ワークスペース内には以下の資産がある。\n",
+        "\n",
+        "- 開発、トレーニング、デプロイのためのコンピューティング先\n",
+        "- 実験及びモデルトレーニング用のデータ\n",
+        "- 共有コードとドキュメントを含むノートブック\n",
+        "- 実験(履歴、ログに記録されたメトリック、出力含む)\n",
+        "- トレーニング済みのモデル\n",
+        "\n",
+        "### Azureリソースとしてのワークスペース\n",
+        "\n",
+        "ワークスペースはAzureリソースなので、ワークスペースをsupportするために必要なその他の関連するAzureリソースとともに、  \n",
+        "Azureサブスクリプションのリソースグループ内に定義される。\n",
+        "\n",
+        "ワークスペースとともに作成されるAzureリソースは次のものがある。\n",
+        "\n",
+        "- ストレージアカウント\n",
+        "    - ワークスペースで使用されるファイルと、実験およびモデルトレーニング用のデータを格納するために使用される\n",
+        "- Application Insights\n",
+        "    - ワークスペース内で予測サービスを監視するために使用される\n",
+        "- Azure Key Vault\n",
+        "    - ワークスペースで使用される認証キーや資格情報などのシークレットを管理するために使用される\n",
+        "- コンテナーレジストリ\n",
+        "    - デプロイされたモデルのコンテナーを管理するために必要に応じて作成される\n",
+        "\n",
+        "### ロールベースのアクセス制御\n",
+        "\n",
+        "ワークスペースにはロールベースの承認ポリシーを割り当てることができる。  \n",
+        "これにより、特定のAzure Active Directoryプリンシパルが実行できるアクションを制限するアクセス許可を管理できる。\n",
+        "\n",
+        "### ワークスペースの作成\n",
+        "\n",
+        "以下の方法でワークスペースを作成できる。\n",
+        "\n",
+        "- Azureポータルで、サブスクリプション、リソースグループ、ワークスペース名を指定して、新しいMachine Learningリソースを作成。\n",
+        "- Azure ML Python SDKを使用して、ワークスペースを作成するコードを実行する。  \n",
+        "たとえば、次のコードによって`aml-workspace`という名前のワークスペースが作成される。  \n",
+        "※Azure ML SDK for Pythonがインストールされ、有効なサブスクリプションIDが指定されていることを前提としている。"
+      ],
+      "metadata": {},
+      "id": "c8c17ecd"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "```\n",
+        "from azureml.core import Workspace\n",
+        "    \n",
+        "    ws = Workspace.create(name='aml-workspace', \n",
+        "                      subscription_id='123456-abc-123...',\n",
+        "                      resource_group='aml-resources',\n",
+        "                      create_resource_group=True,\n",
+        "                      location='eastus'\n",
+        "                     )\n",
+        "```"
+      ],
+      "metadata": {},
+      "id": "96ae453a"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from azureml.core import Workspace\n",
+        "    \n",
+        "ws_1 = Workspace.create(name='mslearn-20210613b', \n",
+        "                      subscription_id='153404fd-72ab-4092-b50e-de490c5509fc',\n",
+        "                      resource_group='20210613',\n",
+        "                      create_resource_group=True,\n",
+        "                      location='eastus'\n",
+        "                     )"
+      ],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Deploying AppInsights with name mslearn2insights324fbe57.\n",
+            "Deployed AppInsights with name mslearn2insights324fbe57. Took 2.4 seconds.\n",
+            "Deploying StorageAccount with name mslearn2storage644e4d66e.\n",
+            "Deploying KeyVault with name mslearn2keyvault60366ceb.\n",
+            "Deployed KeyVault with name mslearn2keyvault60366ceb. Took 17.26 seconds.\n",
+            "Deployed StorageAccount with name mslearn2storage644e4d66e. Took 21.62 seconds.\n",
+            "Deploying Workspace with name mslearn-20210613b.\n",
+            "Deployed Workspace with name mslearn-20210613b. Took 22.54 seconds.\n"
+          ]
+        }
+      ],
+      "execution_count": 1,
+      "metadata": {},
+      "id": "9162bf34"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "以下のようにリソースグループが作成される。\n",
+        "\n",
+        "![image.png](attachment:b3adb17a-bbee-4de5-b5f2-0820f98f18be.png)"
+      ],
+      "metadata": {},
+      "id": "a0a72269"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "- Azure ML CLI拡張機能を含むAzure CLIを使用する。  \n",
+        "例えば次のコマンドを使用できる　※aml-resourcesという名前のリソースグループが既に作成されていることを前提としてる\n",
+        "\n",
+        "```\n",
+        "az ml workspace create -w 'aml-workspace' -g 'aml-resources'\n",
+        "```\n",
+        "\n",
+        "- Azure Resource Managerテンプレートを使用する。"
+      ],
+      "metadata": {},
+      "id": "b5aa5f9d"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# 演習 - ワークスペースを作成する\n",
+        "\n",
+        "1. Azureポータルで、新しいMLリソースを作成する。\n",
+        "\n",
+        "    - サブスクリプション\n",
+        "    - リソースグループ\n",
+        "    - ワークスペース名\n",
+        "    - リージョン\n",
+        "    - ストレージアカウント\n",
+        "    - Key vault\n",
+        "    - アプリケーション insights\n",
+        "    - コンテナーレジストリ\n",
+        "\n",
+        "※注:Azure MLワークスペースを作成する際には、高度なオプションを使用してプライベートエンドポイントを介したアクセスを制御したり、  \n",
+        "データ暗号化のカスタムキーを指定したりすることができる。\n",
+        "\n",
+        "2. ワークスペースとその関連リソースが作成されたら、ポータルでワークスペースを表示する。"
+      ],
+      "metadata": {},
+      "id": "bfdd3c48"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## Azure ML Studioを見る\n",
+        "\n",
+        "Azure MLスタジオでは、ワークスペースを操作するための専用Webポータルを提供している。  \n",
+        "スタジオを起動することで、Azure MLスタジオへ移動することができ、ワークスペースのリソースを管理することができる。"
+      ],
+      "metadata": {},
+      "id": "198f7e9e"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## コンピューティングインスタンスの作成\n",
+        "\n",
+        "Azure MLのメリットの一つは、実験やトレーニングスクリプトを大規模に実行できるクラウドベースのコンピューティングを作成できること。\n",
+        "\n",
+        "1. **コンピューティング**を表示する。  \n",
+        "ここでは、データサイエンス活動のためのコンピューティングリソースを管理する。作成できるリソースは4種類\n",
+        "\n",
+        "    - **コンピューティングインスタンス**\n",
+        "        - データサイエンティストがデータやモデルを扱うために使用する開発ワークステーション\n",
+        "    - **コンピューティングクラスター**\n",
+        "        - 実行コードをオンデマンドに処理するためのスケーラブルな仮想マシンのクラスター\n",
+        "    - **推論クラスター**\n",
+        "        - 訓練されたモデルを使用する予測サービスの導入対象\n",
+        "    - **アタッチされたコンピューティング**\n",
+        "        - 他のAzureコンピューティングリソースへのリンク  \n",
+        "        Virtual MachineやAzure Databricksクラスターなど、他のAzureコンピューティングへのリンク\n",
+        "\n",
+        "2. コンピューティングインスタンスより、新しいコンピューティングインスタンスを追加する。  \n",
+        "このインスタンスは、ノートブックでコードを実行するためのワークステーションとして使用する。\n",
+        "\n",
+        "3. コンピューティングが作成されるまで待つ。\n"
+      ],
+      "metadata": {},
+      "id": "a87aa89a"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## ノートブックのクローンおよび実行\n",
+        "\n",
+        "データサイエンスや機械学習の実験の多くは、ノートブックでコードを実行することで行われる。  \n",
+        "あなたのコンピューティングインスタンスには、広範な作業に使用できる全機能のPythonノートブック環境が含まれているが、  \n",
+        "基本的なノートブックの編集には、Azure MLスタジオの組み込みノートブックページを使用できる。\n",
+        "\n",
+        "1. Azure MLスタジオで**Notebooks**を開く\n",
+        "\n",
+        "2. ターミナルを開き、`git`コマンドでノートブックのクローンを取得する\n",
+        "\n",
+        "3. ターミナルを閉じ、ファイルペイン上で更新してからノートブックを選択することで、ノートブックを開くことができる。"
+      ],
+      "metadata": {},
+      "id": "9f0eaa7d"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Azure Machine Learningでノートブックを始める\n",
+        "\n",
+        "Azure Machine Learningは機械学習を作成・管理するためのクラウドサービスで、  \n",
+        "データサイエンスや機械学習の作業の多くは、このようなノートブックで実現できる。\n",
+        "\n",
+        "## Azure ML Python SDK\n",
+        "\n",
+        "このケースでは、Azure MLコンピューティングインスタンス上のConda環境でノートブックを実行している。  \n",
+        "この環境はデフォルトでコンピューティングインスタンスにPythonパッケージがインストールされており、  \n",
+        "データサイエンティストが通常使用する一般的なPythonパッケージが含まれている。\n",
+        "\n",
+        "また、Azure ML Python SDKも含まれており、これはAzure MLワークスペースのリソースを使用するコードを書くことができるPythonパッケージである。\n",
+        "\n",
+        "以下のセルを実行して、`azureml-core`パッケージをインポートし、インストールされているSDKのバージョンを確認する。"
+      ],
+      "metadata": {
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        }
+      },
+      "id": "bfc3f362"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import azureml.core\n",
+        "\n",
+        "print(\"Ready to use Azure ML\", azureml.core.VERSION)"
+      ],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Ready to use Azure ML 1.28.0\n"
+          ]
+        }
+      ],
+      "execution_count": 1,
+      "metadata": {
+        "gather": {
+          "logged": 1623584093970
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        }
+      },
+      "id": "bca7e9d2"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## ワークスペースの接続\n",
+        "\n",
+        "すべての実験と関連するリソースは、Azure MLのワークスペース内で管理される。  \n",
+        "既存のワークスペースに接続するか、Azure ML SDKを使用して新しいワークスペースを作成することができる。\n",
+        "\n",
+        "ほとんどの場合、ワークスペースの接続情報JSONファイルに保存する必要がある。\n",
+        "これにより、AzureのサブスクリプションIDなどの詳細を覚えておく必要がなく、簡単に接続することができる。\n",
+        "\n",
+        "JSONファイルは、Azureポータルのワークスペース用ブレード、またはAzure MLスタジオのワークスペース詳細ペインからダウンロードできるが、  \n",
+        "ワークスペース内でコンピューティングインスタンスを使用している場合は、構成ファイルはすでにルートフォルダにダウンロードされている。\n",
+        "\n",
+        "以下のコードは、設定ファイルを使用してワークスペースに接続している。  \n",
+        "> 注:ノーツブックセッションでワークスペースに初めて接続した時、Azureにサインインするように促されることがある。  \n",
+        "サインインに成功したら、開いていたブラウザタブを閉じ、このノートブックに戻ることができる。"
+      ],
+      "metadata": {
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        }
+      },
+      "id": "d690ba2c"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from azureml.core import Workspace\n",
+        "\n",
+        "ws = Workspace.from_config()\n",
+        "print(ws.name, \"loaded\")"
+      ],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "20210613 loaded\n"
+          ]
+        }
+      ],
+      "execution_count": 2,
+      "metadata": {
+        "gather": {
+          "logged": 1623584445062
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        }
+      },
+      "id": "e9226906"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## ワークスペースでAzure MLリソースを表示する\n",
+        "\n",
+        "ワークスペースの接続ができたので、リソースを扱うことができる。  \n",
+        "例えば、以下のコードを使用して、ワークスペースのコンピューティングリソースを列挙することができる。"
+      ],
+      "metadata": {
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        }
+      },
+      "id": "11ecc99a"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "print(\"Compute Resources:\")\n",
+        "for compute_name in ws.compute_targets:\n",
+        "    compute = ws.compute_targets[compute_name]\n",
+        "    print(\"\\t\", compute.name, ':', compute.type)"
+      ],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Compute Resources:\n",
+            "\t mslearn-20210613a : ComputeInstance\n"
+          ]
+        }
+      ],
+      "execution_count": 3,
+      "metadata": {
+        "gather": {
+          "logged": 1623584477269
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        }
+      },
+      "id": "2bc1452a"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## Azure MLのツールとインターフェイス\n",
+        "\n",
+        "Azure MLにはクラウドベースのサービスが用意されており、その使用方法には柔軟性がある。  \n",
+        "Azure ML用に特別に設計されたユーザインターフェイスがある。  \n",
+        "また、プログラムインターフェイスを使用してワークスペースリソースを管理したり、機械学習の操作を実行したりすることができる。\n"
+      ],
+      "metadata": {
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        }
+      },
+      "id": "c45549e4"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "### Azure MLスタジオ\n",
+        "\n",
+        "Azure MLワークスペース内の資産をAzureポータル上で管理できるが、  \n",
+        "これはAzureのすべての種類のリソースを管理するための一般的なインターフェイスであるため、データ分析に関連するその他のユーザは、  \n",
+        "より焦点を絞った専用インターフェイスの使用を推奨。\n",
+        "\n",
+        "Azure MLスタジオは、Azure MLワークスペースを管理するためのWebベースツールで、  \n",
+        "これを使用してワークスペース内のすべての資産を作成、管理、表示できる。また、次のグラフィカルツールが用意されている。\n",
+        "\n",
+        "- デザイナー\n",
+        "    - コードなしの機械学習モデル開発のためのインターフェイス\n",
+        "- 自動機械学習\n",
+        "    - データに対して最適なモデルを見つけるため、アルゴリズムとデータ前処理手法を組み合わせて使用しモデルをトレーニングできる  \n",
+        "    ウィザードインターフェイス"
+      ],
+      "metadata": {
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        }
+      },
+      "id": "6d4e3a1b"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "### Azure ML SDK\n",
+        "Azure MLスタジオのようなグラフィカルインターフェイスを使用すると、機械学習資産を簡単に作成および管理できるが、  \n",
+        "多くの場合、リソースの管理にコードベースのアプローチを使用すると便利で、管理するためのスクリプトを記述することで、次のことができる。\n",
+        "\n",
+        "- 好みの開発環境から機械学習を実行できる\n",
+        "- リソースの作成と構成を自動化し、反復可能にする\n",
+        "- 複数の環境(開発、テスト、運用など)でレプリケートする必要があるリソースの一貫性を確保する\n",
+        "- 継続的インテグレーション/継続的デプロイ(CI/CD)パイプラインなどの開発者の運用(DevOps)ワークフローに機械学習のリソース構成を組み込むことができる。\n",
+        "\n",
+        "Azure MLにより、Azure MLワークスペースでリソースを作成、管理、使用するために使用できる、PythonおよびR用のソフトウェア開発キット(SDK)が提供される。"
+      ],
+      "metadata": {
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        }
+      },
+      "id": "4974036e"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "### Azure ML SDK for Pythonのインストール\n",
+        "\n",
+        "`pip`コマンドを用いて、以下のようにインストールできる。\n",
+        "\n",
+        "```\n",
+        "pip install azureml-sdk\n",
+        "```\n",
+        "SDKはPython pipユーティリティを使用してインストールされ、メインの**azureml-sdk**パッケージと、特殊な昨日を含む多くの補助的なパッケージで構成される。  \n",
+        "例えば、**azureml-widgets**パッケージでは、jupyter notebook環境で対話型ウィジェットのサポートが提供される。\n"
+      ],
+      "metadata": {
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        }
+      },
+      "id": "0c742a17"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "### ワークスペースへの接続\n",
+        "\n",
+        "SDKパッケージをpython環境にインストールできたら、ワークスペースに接続して機械学習の操作を実行するためのコードを記述できる。  \n",
+        "ワークスペースに接続する最も簡単な方法は、以下のようにAzureサブスク、リソースグループ、ワークスペースの詳細を含むワークスペース構成ファイルを使用すること。\n",
+        "\n",
+        "> ※以下のjsonファイルは、概要ページからダウンロードしたもの"
+      ],
+      "metadata": {
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        }
+      },
+      "id": "ba62ec37"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "```:json\n",
+        "{\n",
+        "    \"id\": \"/subscriptions/153404fd-72ab-4092-b50e-de490c5509fc/resourceGroups/20210613/providers/Microsoft.MachineLearningServices/workspaces/20210613\",\n",
+        "    \"name\": \"20210613\",\n",
+        "    \"type\": \"Microsoft.MachineLearningServices/workspaces\",\n",
+        "    \"location\": \"westus2\",\n",
+        "    \"tags\": {},\n",
+        "    \"etag\": null,\n",
+        "    \"properties\": {\n",
+        "        \"friendlyName\": \"20210613\",\n",
+        "        \"description\": \"\",\n",
+        "        \"storageAccount\": \"/subscriptions/153404fd-72ab-4092-b50e-de490c5509fc/resourcegroups/20210613/providers/microsoft.storage/storageaccounts/202106138491592323\",\n",
+        "        \"containerRegistry\": \"\",\n",
+        "        \"keyVault\": \"/subscriptions/153404fd-72ab-4092-b50e-de490c5509fc/resourcegroups/20210613/providers/microsoft.keyvault/vaults/a202106137570553126\",\n",
+        "        \"applicationInsights\": \"/subscriptions/153404fd-72ab-4092-b50e-de490c5509fc/resourcegroups/20210613/providers/microsoft.insights/components/202106137897442529\",\n",
+        "        \"hbiWorkspace\": false,\n",
+        "        \"tenantId\": \"5456e8d8-0223-4619-ba5b-e313627da53d\",\n",
+        "        \"imageBuildCompute\": \"\",\n",
+        "        \"provisioningState\": \"Succeeded\",\n",
+        "        \"creationTime\": \"2021-06-13T08:30:48.5558351+00:00\",\n",
+        "        \"notebookInfo\": {\n",
+        "            \"resourceId\": \"ed8e6e4a20b24598986771c9c7468e34\",\n",
+        "            \"fqdn\": \"ml-20210613-westus2-322f90dd-b503-46f1-8d45-68f1641a9197.notebooks.azure.net\",\n",
+        "            \"isPrivateLinkEnabled\": false,\n",
+        "            \"notebookPreparationError\": null\n",
+        "        },\n",
+        "        \"storageHnsEnabled\": false,\n",
+        "        \"workspaceId\": \"322f90dd-b503-46f1-8d45-68f1641a9197\",\n",
+        "        \"linkedModelInventoryArmId\": null,\n",
+        "        \"privateLinkCount\": 0,\n",
+        "        \"allowPublicAccessWhenBehindVnet\": false,\n",
+        "        \"discoveryUrl\": \"https://westus2.api.azureml.ms/discovery\",\n",
+        "        \"sdkTelemetryAppInsightsKey\": \"19f24253-9564-406c-9a1e-a48a21b145aa\"\n",
+        "    },\n",
+        "    \"identity\": {\n",
+        "        \"type\": \"SystemAssigned\",\n",
+        "        \"principalId\": \"18459ee1-c609-4ff2-98c6-ad94eb5ac6c1\",\n",
+        "        \"tenantId\": \"5456e8d8-0223-4619-ba5b-e313627da53d\"\n",
+        "    },\n",
+        "    \"sku\": {\n",
+        "        \"name\": \"Basic\",\n",
+        "        \"tier\": \"Basic\"\n",
+        "    },\n",
+        "    \"systemData\": {\n",
+        "        \"createdAt\": \"2021-06-13T08:30:45.1488264Z\",\n",
+        "        \"createdBy\": \"tsutayan@gmail.com\",\n",
+        "        \"createdByType\": \"User\",\n",
+        "        \"lastModifiedAt\": \"2021-06-13T08:30:45.1488264Z\",\n",
+        "        \"lastModifiedBy\": \"tsutayan@gmail.com\",\n",
+        "        \"lastModifiedByType\": \"User\"\n",
+        "    }\n",
+        "}\n",
+        "```"
+      ],
+      "metadata": {
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        }
+      },
+      "id": "b3f64445"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "構成ファイルを使用してワークスペースに接続するには、以下のようにSDKの**Workspace**クラスの**from_config**メソッドを使用できる。\n",
+        "\n",
+        "```\n",
+        "from azureml.core import Workspace\n",
+        "\n",
+        "ws = Workspace.from_config()\n",
+        "```\n",
+        "\n",
+        "限定では、**from_config**メソッドより、Pythonコードファイルが格納されているフォルダで**config.json**が検索されるが、  \n",
+        "必要に応じて別のファイルパスを指定することができる。\n",
+        "\n",
+        "構成ファイルを使用する代わりに、以下のように明示的に指定されたサブスクリプション、リソースグループ、ワークスペースの詳細を使用して、  \n",
+        "**Workspace**クラスの**get**メソッドを使用することもできる。  \n",
+        "ただし、複数のスクリプトを使用する場合の柔軟性が高いため、一般的には構成ファイルの手法が推奨される。\n",
+        "\n",
+        "```\n",
+        "from azureml.core import Workspace\n",
+        "\n",
+        "ws = Workspace.get(name='aml-workspace',\n",
+        "                   subscription_id='1234567-abcde-890-fgh...',\n",
+        "                   resource_group='aml-resources')\n",
+        "```\n",
+        "\n",
+        "どちらの方法を使用する場合でも、Azureサブスクリプションに現在アクティブなセッションがない場合は、認証を求めるメッセージが表示される。"
+      ],
+      "metadata": {
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        }
+      },
+      "id": "b1fd8c41"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "### Workspaceクラスの使用\n",
+        "\n",
+        "**Workspace**クラスは、ほとんどのコード処理の開始点となる。  \n",
+        "たとえば、以下のように**compute_targets**属性を使用して、ワークスペースに定義されているコンピューティング先を含む辞書オブジェクトを取得できる。\n",
+        "\n",
+        "```\n",
+        "for compute_name in ws.compute_targets:\n",
+        "    compute = ws.compute_targets[compute_name]\n",
+        "    print(compute.name, \":\", compute.type)\n",
+        "```\n",
+        "\n",
+        "SDKには、Azure MLワークスペースで多くの種類のリソースを作成、管理、使用するために使える、充実したクラスライブラリが含まれる。\n",
+        "\n",
+        "※SDKドキュメント:https://aka.ms/AA70zeq"
+      ],
+      "metadata": {},
+      "id": "aad456c9"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "### Azure ML CLI拡張機能\n",
+        "\n",
+        "Azure CLIは、Azureリソースを管理するためのクロスプラットフォームコマンドラインツール。  \n",
+        "Azure ML CLI拡張機能をインストールするには、最初にAzure CLIをインストールする必要がある。\n",
+        "\n",
+        "```\n",
+        "az extension add -n azure-cli-ml\n",
+        "```\n",
+        "\n",
+        "Azure ML CLI拡張機能を使用するには、実行するアクションに対して適切なパラメータを指定した`azml`コマンドを実行する。  \n",
+        "たとえば、ワークスペース内のコンピューティング先を一覧表示するには、次のコマンドを実行する。\n",
+        "\n",
+        "> 注: 以下では、`-g`によって、`-w`で定義されたAzure MLワークスペースが指定されているリソースグループ名を指定する。\n",
+        "\n",
+        "```\n",
+        "az ml computetarget list -g 'aml-resources' -w 'aml-workspace'\n",
+        "```"
+      ],
+      "metadata": {},
+      "id": "8a360da0"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "### コンピューティングインスタンス\n",
+        "\n",
+        "Azure MLには、ワークスペース内に**コンピューティングインスタンス**を作成することで、  \n",
+        "そのワークスペース内の他のすべてのリソースとともに管理される開発環境を提供する機能が含まれている。\n",
+        "\n",
+        "コンピューティングインスタンスには、Jupyter notebookとJupyterLabのインストールが含まれる。  \n",
+        "このインストールを使用すると、Azure ML　SDKを使用してワークスペース内のリソースを操作するコードを記述して実行できる。\n",
+        "\n",
+        "コンピューティングインスタンスは、Azureでホストされているため、料金はコンピューティングリソースが実行中のときだけ発生する。  \n",
+        "そのため、必要に応じてコンピューティングインスタンスを作成し、ワークロードが完了したら**これを停止することでコストを最小限に抑える**ことができる。"
+      ],
+      "metadata": {},
+      "id": "02c8eb31"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "### Visual Studio Code\n",
+        "\n",
+        "VSCodeは簡易コード編集環境であり、さまざまな種類のコード用のビジュアルインターフェイスが提供される。  \n",
+        "また、JSONやXMLなどの一般的なデータ形式用のIntelliSenceと構文の書式設定も使用できる。\n",
+        "\n",
+        "VSCodeの柔軟性は、特定のワークロードに対する構文チェック、デバッグ、ビジュアル管理インターフェイスを追加する、  \n",
+        "モジュール系s機の拡張機能をインストールできることに基づく。\n",
+        "\n",
+        "VSCおで用のAzure ML拡張機能により、Azure MLワークスペース内のリソースを操作するためのグラフィカルインターフェイスが提供される。  \n",
+        "Azure MLの機能と、Pythonの拡張機能を組み合わせて、Visual Studio Code環境からAzure MLで完全なエンドツーエンドの機械学習ワークロードを管理できる。"
+      ],
+      "metadata": {},
+      "id": "15955349"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## Azure MLの実験\n",
+        "\n",
+        "Azure MLにおいて、**実験とは名前付きプロセス**であり、通常は、メトリックと出力を生成し、  \n",
+        "Azure MLワークスペースで追跡できることが可能なスクリプトまたはパイプラインを実行することである。\n",
+        "\n",
+        "![image.png](attachment:e05150df-b21e-4dff-b32a-48e14e475caf.png)\n",
+        "\n",
+        "実験は、様々なデータ、コード、設定を使用して複数回実行できる。  \n",
+        "各実行が、Azure MLで追跡されるため、実行履歴を表示して、各実行の結果を比較できる。"
+      ],
+      "metadata": {},
+      "id": "c4cb0213"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "### 実験の実行コンテキスト\n",
+        "\n",
+        "実験を送信する場合、以下のように**実験の実行コンテキスト**を使用して、Azure MLで追跡される実験の実行を初期化し、終了する。\n",
+        "\n",
+        "```\n",
+        "from azureml.core import Experiment\n",
+        "\n",
+        "# 実験変数の作成\n",
+        "experiment = Experiment(workspace = ws, name = &quot;my-experiment\")\n",
+        "\n",
+        "# 実験の開始\n",
+        "run = experiment.start_logging()\n",
+        "\n",
+        "# 実験コードをここに入れる\n",
+        "\n",
+        "# 実験の終了\n",
+        "run.complete()\n",
+        "```\n",
+        "\n",
+        "実験が完了したら、Azure MLスタジオの**実験**タブで実行の詳細を確認できる。\n",
+        "\n",
+        "### メトリックのログ記録と出力の作成\n",
+        "\n",
+        "実験が最も役立つのは、複数回の実行にまたがって追跡できるメトリックと出力を生成する場合。\n",
+        "\n",
+        "#### メトリックのログ記録\n",
+        "\n",
+        "すべての実験でログファイルが生成される。  \n",
+        "ログファイルには、対話形式での実験中に端末に書き込まれるメッセージが含まれているため、簡単な`print`ステートメントを使用し、  \n",
+        "ログにメッセージを書き込むことができる。\n",
+        "ただし、実行を繰り返して比較するために名前付きメトリックを記録する場合は、この目的に特化したさまざまなログ記録関数が用意されている**Run**オブジェクトを使用する。  \n",
+        "以下に例を示す。\n",
+        "\n",
+        "- log\n",
+        "    - 1つの名前付きの値を記録\n",
+        "- log_list\n",
+        "    - 値の名前付きリストを記録\n",
+        "- log_row\n",
+        "    - 複数の列を含む行を記録\n",
+        "- log_table\n",
+        "    - 辞書をテーブルとして記録\n",
+        "- log_image\n",
+        "    - 画像ファイルまたはプロットを記録\n",
+        "\n",
+        "例えば、次のコードでは、CSVファイル内の観測(レコード)の数が記録される。\n",
+        "\n",
+        "```\n",
+        "from azureml.core import Experiment\n",
+        "import pandas as pd\n",
+        "\n",
+        "# ワークスペースでAzureの実験を行う\n",
+        "experiment = Experiment(workspace = ws, name = 'my-experiment')\n",
+        "\n",
+        "# 実験データの記録開始\n",
+        "run = experiment.start_logging()\n",
+        "\n",
+        "# データセットの読み込みと行数のカウント\n",
+        "data = pd.read_csv('data.csv')\n",
+        "row_count = (len(data))\n",
+        "\n",
+        "# 行数をロギング\n",
+        "run.log('observations', row_count)\n",
+        "\n",
+        "# 実験の終了\n",
+        "run.complete()\n",
+        "```"
+      ],
+      "metadata": {},
+      "id": "dbad804d"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "#### ログに記録されたメトリックの取得と表示\n",
+        "\n",
+        "次に示すように、Azure MLスタジオでの実験の実行によって、またはノートブックで**RunDetails**ウィジェットを使用することによって、  \n",
+        "ログに記録されたメトリックを表示できる。\n",
+        "\n",
+        "```\n",
+        "from azureml.widgets import RunDetails\n",
+        "\n",
+        "RunDetails(run).show()\n",
+        "```\n",
+        "\n",
+        "以下のように**Run**オブジェクトの**get_metrics**メソッドを使用してメトリックを取得することもできる。  \n",
+        "このメソッドではメトリックのJSON表現が返される。\n",
+        "\n",
+        "```\n",
+        "import json\n",
+        "\n",
+        "# Get logged metrics\n",
+        "metrics = run.get_metrics()\n",
+        "print(json.dumps(metrics, indent=2))\n",
+        "```\n",
+        "\n",
+        "前のコードでは、次のような出力が生成される場合がある。\n",
+        "\n",
+        "```\n",
+        "{\n",
+        "  \"observations\": 15000\n",
+        "}\n",
+        "```"
+      ],
+      "metadata": {},
+      "id": "37532a43"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "#### 実験の出力ファイル\n",
+        "\n",
+        "実験ではメトリックをログに記録するだけでなく、出力ファイルも生成できる。  \n",
+        "多くの場合、これらはトレーニング済みの機械学習モデルだが、任意の種類のファイルを保存し、実験の実行の出力として使用可能にすることができる。  \n",
+        "実験の出力ファイルは、実験の**outputs**フォルダに保存される。\n",
+        "\n",
+        "実験の出力にファイルを追加するために使用する手法は、実験を実行する方法によって異なる。  \n",
+        "これまでの例では、実験のライフサイクルをコードのインラインで制御している。  \n",
+        "この方法を使用すると、次に示すように、実験コード内の**Run**オブジェクトの**upload_file**メソッドを使用して、  \n",
+        "ローカルファイルを実行の**outputs**フォルダーにアップロードできる。\n",
+        "\n",
+        "```\n",
+        "run.upload_file(name='outputs/sample.csv', path_or_stream='./sample.csv')\n",
+        "```\n",
+        "\n",
+        "リモートコンピューティングコンテキストで実験を実行する場合、そのコンピューティングコンテキストで**output**フォルダに書き込まれたファイルは、  \n",
+        "実験が完了すると、実行の**outputs**フォルダーに自動的にアップロードされる。\n",
+        "\n",
+        "実験の実行にどの方法を使用しても、次のように**Run**オブジェクトから出力ファイルの一覧を取得できる。\n",
+        "\n",
+        "```\n",
+        "import json\n",
+        "\n",
+        "files = run.get_file_names()\n",
+        "print(json.dumps(files, indent=2))\n",
+        "```\n",
+        "\n",
+        "前のコードでは、次のような出力が生成される場合がある。\n",
+        "\n",
+        "```\n",
+        "[\n",
+        "  \"outputs/sample.csv\"\n",
+        "]\n",
+        "```"
+      ],
+      "metadata": {},
+      "id": "1b32a372"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "#### 実験としてスクリプトの実行\n",
+        "\n",
+        "**Experiment**オブジェクトの**start_logging**メソッドを使用して、実験をインラインで実行できるが、  \n",
+        "実験のロジックをスクリプト内にカプセル化し、そのスクリプトを実験として実行するほうが一般的。  \n",
+        "そのスクリプトは任意の有効なコンピューティングコンテキストで実行できるため、大規模に実験を実行するためのより柔軟なソリューションになる。\n",
+        "\n",
+        "実験スクリプトは、実験で実行するコードを含むPythonコードファイルに過ぎない。  \n",
+        "実験の実行コンテキスト(メトリックをログに記録するために必要)にアクセスするには、スクリプトで**azureml.core.Run**をインポートし、  \n",
+        "**get_context**メソッドを呼び出す必要がある。  \n",
+        "その後、次の例に示すように、スクリプトで実行コンテキストを使用してメトリックをログに記録し、ファイルをアップロードし、実験を完了することができる。\n",
+        "\n",
+        "```\n",
+        "from azureml.core import Run\n",
+        "import pandas as pd\n",
+        "import matplotlib.pyplot as plt\n",
+        "import os\n",
+        "\n",
+        "# Get the experiment run context\n",
+        "run = Run.get_context()\n",
+        "\n",
+        "# load the diabetes dataset\n",
+        "data = pd.read_csv('data.csv')\n",
+        "\n",
+        "# Count the rows and log the result\n",
+        "row_count = (len(data))\n",
+        "run.log('observations', row_count)\n",
+        "\n",
+        "# Save a sample of the data\n",
+        "os.makedirs('outputs', exist_ok=True)\n",
+        "data.sample(100).to_csv(\"outputs/sample.csv\", index=False, header=True)\n",
+        "\n",
+        "# Complete the run\n",
+        "run.complete()\n",
+        "```\n",
+        "\n",
+        "スクリプトを実験として実行するには、実行するスクリプトとそれを実行するPython環境を定義する**スクリプト構成**を定義する必要がある。  \n",
+        "これは、**ScriptRunConfig**オブジェクトを使用して実装される。\n",
+        "\n",
+        "例えば、次のコードを使用して、**experiment_files**フォルダー内のスクリプトに基づいて実験を実行することができる。\n",
+        "\n",
+        "> 注:このフォルダーには、前述のスクリプトコード例の`data.csv`など、スクリプトで使用するファイルも含まれている必要がある。\n",
+        "\n",
+        "```\n",
+        "from azureml.core import Experiment, ScriptRunConfig\n",
+        "\n",
+        "# スクリプト構成の作成\n",
+        "script_config = ScriptRunConfig(source_directory=experiment_folder,\n",
+        "                                script='experiment.py') \n",
+        "\n",
+        "# 実験の実行\n",
+        "experiment = Experiment(workspace = ws, name = 'my-experiment')\n",
+        "run = experiment.submit(config=script_config)\n",
+        "run.wait_for_completion(show_output=True)\n",
+        "```\n",
+        "\n",
+        "> 注:暗黙的に作成された**RunConfiguration**オブジェクトにより、スクリプトで使用可能なパッケージを含む、実験用のPython環境が定義される。  \n",
+        "スクリプトが規定の環境に含まれていないパッケージに依存している場合は、必要なPythonパッケージを指定するために、**CondaDependencies**オブジェクトを使用する**Environment**オブジェクトに**ScriptRunConfig**を関連付ける必要がある。  "
+      ],
+      "metadata": {},
+      "id": "e9b3acc3"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## 演習 - 実験を実行する\n",
+        "\n",
+        "この演習では、Azure ML SDKを使用して、Pythonコードを実験として実行する。\n",
+        "\n",
+        "### Azure ML SDKがインストールされていることを確認する\n",
+        "\n",
+        "Azure ML SDKは、コンピューティングインスタンスにデフォルトでインストールされている。  \n",
+        "以下の手順でインストールを確認できる。"
+      ],
+      "metadata": {},
+      "id": "fb6123fd"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "!pip show azureml-sdk"
+      ],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Name: azureml-sdk\n",
+            "Version: 1.28.0\n",
+            "Summary: Microsoft Azure Machine Learning Python SDK\n",
+            "Home-page: https://docs.microsoft.com/python/api/overview/azure/ml/?view=azure-ml-py\n",
+            "Author: Microsoft Corp\n",
+            "Author-email: None\n",
+            "License: https://aka.ms/azureml-sdk-license\n",
+            "Location: /anaconda/envs/azureml_py36/lib/python3.6/site-packages\n",
+            "Requires: azureml-train, azureml-train-automl-client, azureml-pipeline, azureml-core, azureml-dataset-runtime\n",
+            "Required-by: \n"
+          ]
+        }
+      ],
+      "execution_count": 2,
+      "metadata": {},
+      "id": "b021998f"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Azure ML SDKパッケージは、Azure MLを使用するために必要な最も重要なライブラリを提供している。  \n",
+        "しかし、メインのSDKに含まれていない追加パッケージもある。  \n",
+        "以下のように、ノートブックにAzure MLの情報を表示するためのライブラリを含む**azureml-widgets**パッケージもインストールされていることを確認する。"
+      ],
+      "metadata": {},
+      "id": "51b2c4c9"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "!pip show azureml-widgets"
+      ],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Name: azureml-widgets\n",
+            "Version: 1.28.0\n",
+            "Summary: azureml widgets\n",
+            "Home-page: https://docs.microsoft.com/python/api/overview/azure/ml/?view=azure-ml-py\n",
+            "Author: Microsoft Corp\n",
+            "Author-email: None\n",
+            "License: https://aka.ms/azureml-sdk-license\n",
+            "Location: /anaconda/envs/azureml_py36/lib/python3.6/site-packages\n",
+            "Requires: ipywidgets, azureml-core, azureml-telemetry, azure-storage-blob\n",
+            "Required-by: \n"
+          ]
+        }
+      ],
+      "execution_count": 3,
+      "metadata": {},
+      "id": "7009e359"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## 実験を行う\n",
+        "\n",
+        "Azure ML SDKを使用すると、メトリックを記録して出力を生成するコード実験を実行できる。  \n",
+        "これは、Azure MLでのほとんどの機械学習操作の中核となるもの。\n",
+        "\n",
+        "### ワークスペースの接続\n",
+        "\n",
+        "すべての実験と関連するリソースは、Azure MLのワークスペース内で管理される。  \n",
+        "殆どの場合、ワークスペースの構成をjsonファイルに保存する必要がある。  \n",
+        "これにより、AzureサブスクリプションIDなどの詳細を覚えておく必要がなく、簡単に再接続することができる。  \n",
+        "jsonファイルは、Azureポータルのワークスペース用ブレードからダウンロードできるが、ワークスペース内でコンピューティングインスタンスを使用している場合は、  \n",
+        "構成ファイルは既にルートフォルダにダウンロードされている。\n",
+        "\n",
+        "以下のコードは、構成ファイルを使用してワークスペースに接続する。\n",
+        "\n",
+        "> 注:Azureサブスクリプションで認証済みのセッションをまだ確立していない場合、リンクをクリックして認証コードを入力し、  \n",
+        "Azureにサインインすることで認証するように促される。"
+      ],
+      "metadata": {},
+      "id": "8e2197ff"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import azureml.core\n",
+        "from azureml.core import Workspace\n",
+        "\n",
+        "# 保存した設定ファイルよりワークスペースを読み込む\n",
+        "ws = Workspace.from_config()\n",
+        "print('Ready to use Azure ML {} to work with {}'.format(azureml.core.VERSION, ws.name))"
+      ],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Ready to use Azure ML 1.28.0 to work with 20210613\n"
+          ]
+        }
+      ],
+      "execution_count": 4,
+      "metadata": {},
+      "id": "458647bf"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "### 実験の実行\n",
+        "\n",
+        "ここでは、Azure ML実験を使ってPythonコードを実行し、データから抽出した値を記録する方法を学ぶ。  \n",
+        "このケースでは、糖尿病の検査を受けた患者の詳細を含む単純なデータセットを使用する。  \n",
+        "実験を実行してデータを探索し、統計、視覚化、データサンプルを抽出する。\n",
+        "\n",
+        "使用するコードの殆どはデータ探索プロセスで実行されるようなごく一般的なPythonコードだが、  \n",
+        "いくつかの行を追加することで、コードはAzure MLの実験を使用し、実行の詳細を記録する。"
+      ],
+      "metadata": {},
+      "id": "aabb54b8"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from azureml.core import Experiment\n",
+        "import pandas as pd\n",
+        "import matplotlib.pyplot as plt\n",
+        "%matplotlib inline \n",
+        "\n",
+        "# ワークスペース内にAzureMLの実験を作成する\n",
+        "experiment = Experiment(workspace=ws, name=\"mslearn-diabetes\")"
+      ],
+      "outputs": [],
+      "execution_count": 6,
+      "metadata": {},
+      "id": "5fb66fd7"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# 実験データのロギングを開始し、実験実行のリファレンスを取得\n",
+        "run = experiment.start_logging()\n",
+        "print(\"Starting experiment:\", experiment.name)"
+      ],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Starting experiment: mslearn-diabetes\n"
+          ]
+        }
+      ],
+      "execution_count": 7,
+      "metadata": {},
+      "id": "59006b5e"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# ローカルデータよりデータを読み込む\n",
+        "data = pd.read_csv('data/diabetes.csv')"
+      ],
+      "outputs": [],
+      "execution_count": 8,
+      "metadata": {},
+      "id": "9bb60011"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# 行をカウントし、結果を記録\n",
+        "row_count = (len(data))\n",
+        "run.log('observations', row_count)\n",
+        "print('Analyzing {} rows of data'.format(row_count))"
+      ],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Analyzing 10000 rows of data\n"
+          ]
+        }
+      ],
+      "execution_count": 9,
+      "metadata": {},
+      "id": "b04c352d"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# 糖尿病患者と非糖尿病患者の数をプロットしてロギング\n",
+        "diabetic_counts = data['Diabetic'].value_counts()\n",
+        "fig = plt.figure(figsize=(6,6))\n",
+        "ax = fig.gca()    \n",
+        "diabetic_counts.plot.bar(ax = ax) \n",
+        "ax.set_title('Patients with Diabetes') \n",
+        "ax.set_xlabel('Diagnosis') \n",
+        "ax.set_ylabel('Patients')\n",
+        "plt.show()\n",
+        "run.log_image(name='label distribution', plot=fig)"
+      ],
+      "outputs": [
+        {
+          "output_type": "display_data",
+          "data": {
+            "image/png": "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\n",
+            "text/plain": "<Figure size 432x432 with 1 Axes>"
+          },
+          "metadata": {
+            "needs_background": "light"
+          }
+        }
+      ],
+      "execution_count": 10,
+      "metadata": {},
+      "id": "caf38d20"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# 別々に妊娠数を記録する\n",
+        "pregnancies = data.Pregnancies.unique()\n",
+        "run.log_list('pregnancy categories', pregnancies)"
+      ],
+      "outputs": [],
+      "execution_count": 11,
+      "metadata": {},
+      "id": "b57a5f4f"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# 数値列の要約統計を記録\n",
+        "med_columns = ['PlasmaGlucose', 'DiastolicBloodPressure', 'TricepsThickness', 'SerumInsulin', 'BMI']\n",
+        "summary_stats = data[med_columns].describe().to_dict()\n",
+        "for col in summary_stats:\n",
+        "    keys = list(summary_stats[col].keys())\n",
+        "    values = list(summary_stats[col].values())\n",
+        "    for index in range(len(keys)):\n",
+        "        run.log_row(col, stat=keys[index], value = values[index])"
+      ],
+      "outputs": [],
+      "execution_count": 12,
+      "metadata": {},
+      "id": "3430cd40"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# データのサンプルを保存し、実験の出力にアップロード\n",
+        "data.sample(100).to_csv('sample.csv', index=False, header=True)\n",
+        "run.upload_file(name='outputs/sample.csv', path_or_stream='./sample.csv')"
+      ],
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "execution_count": 13,
+          "data": {
+            "text/plain": "<azureml._restclient.models.batch_artifact_content_information_dto.BatchArtifactContentInformationDto at 0x7f0d4861f438>"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 13,
+      "metadata": {},
+      "id": "db9ca9ec"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# 実験の終了\n",
+        "run.complete()"
+      ],
+      "outputs": [],
+      "execution_count": 15,
+      "metadata": {},
+      "id": "af6fa011"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "### 実行の詳細を参照する\n",
+        "\n",
+        "ノートブックでは、**RunDetails**ウィジェットを用いて実行の詳細を視覚化することができる。"
+      ],
+      "metadata": {},
+      "id": "ba1eb2c5"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from azureml.widgets import RunDetails\n",
+        "\n",
+        "RunDetails(run).show()"
+      ],
+      "outputs": [
+        {
+          "output_type": "display_data",
+          "data": {
+            "text/plain": "_UserRunWidget(widget_settings={'childWidgetDisplay': 'popup', 'send_telemetry': False, 'log_level': 'INFO', '…",
+            "application/vnd.jupyter.widget-view+json": {
+              "version_major": 2,
+              "version_minor": 0,
+              "model_id": "843a86aa21ee42c4a59fae49c28190e2"
+            }
+          },
+          "metadata": {}
+        },
+        {
+          "output_type": "display_data",
+          "data": {
+            "application/aml.mini.widget.v1": "{\"status\": \"Completed\", \"workbench_run_details_uri\": \"https://ml.azure.com/runs/8985fd8e-6d55-4bbe-82a9-ad07b2e5035d?wsid=/subscriptions/153404fd-72ab-4092-b50e-de490c5509fc/resourcegroups/20210613/workspaces/20210613&tid=5456e8d8-0223-4619-ba5b-e313627da53d\", \"run_id\": \"8985fd8e-6d55-4bbe-82a9-ad07b2e5035d\", \"run_properties\": {\"run_id\": \"8985fd8e-6d55-4bbe-82a9-ad07b2e5035d\", \"created_utc\": \"2021-06-13T15:23:21.573617Z\", \"properties\": {\"azureml.git.repository_uri\": \"https://github.com/iguru0331/mslearn-dp100.git\", \"mlflow.source.git.repoURL\": \"https://github.com/iguru0331/mslearn-dp100.git\", \"azureml.git.branch\": \"main\", \"mlflow.source.git.branch\": \"main\", \"azureml.git.commit\": \"492cf44c80ca3cc4c35e1547a16268e56f6dfb47\", \"mlflow.source.git.commit\": \"492cf44c80ca3cc4c35e1547a16268e56f6dfb47\", \"azureml.git.dirty\": \"True\", \"ContentSnapshotId\": \"5124abea-3f08-46eb-812a-3e42db7a9cbc\"}, \"tags\": {}, \"end_time_utc\": \"2021-06-13T15:23:58.360854Z\", \"status\": \"Completed\", \"log_files\": {}, \"log_groups\": [], \"run_duration\": \"0:00:36\", \"run_number\": \"4\", \"run_queued_details\": {\"status\": \"Completed\", \"details\": null}}, \"child_runs\": [], \"children_metrics\": {}, \"run_metrics\": [{\"name\": \"observations\", \"run_id\": \"8985fd8e-6d55-4bbe-82a9-ad07b2e5035d\", \"categories\": [0], \"series\": [{\"data\": [10000]}]}, {\"name\": \"label distribution\", \"run_id\": \"8985fd8e-6d55-4bbe-82a9-ad07b2e5035d\", \"categories\": [0], \"series\": [{\"data\": [\"aml://artifactId/ExperimentRun/dcid.8985fd8e-6d55-4bbe-82a9-ad07b2e5035d/label distribution_1623597819.png\"]}]}, {\"name\": \"pregnancy categories\", \"run_id\": \"8985fd8e-6d55-4bbe-82a9-ad07b2e5035d\", \"categories\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"series\": [{\"data\": [0, 8, 7, 9, 1, 3, 5, 2, 6, 11, 4, 13, 10, 12, 14]}]}, {\"name\": \"PlasmaGlucose\", \"run_id\": \"8985fd8e-6d55-4bbe-82a9-ad07b2e5035d\", \"categories\": [0], \"series\": [{\"data\": [{\"stat\": [\"count\", \"mean\", \"std\", \"min\", \"25%\", \"50%\", \"75%\", \"max\"], \"value\": [10000.0, 107.8502, 31.920909360565563, 44.0, 84.0, 105.0, 129.0, 192.0]}]}]}, {\"name\": \"DiastolicBloodPressure\", \"run_id\": \"8985fd8e-6d55-4bbe-82a9-ad07b2e5035d\", \"categories\": [0], \"series\": [{\"data\": [{\"stat\": [\"count\", \"mean\", \"std\", \"min\", \"25%\", \"50%\", \"75%\", \"max\"], \"value\": [10000.0, 71.2075, 16.801478289640706, 24.0, 58.0, 72.0, 85.0, 117.0]}]}]}, {\"name\": \"TricepsThickness\", \"run_id\": \"8985fd8e-6d55-4bbe-82a9-ad07b2e5035d\", \"categories\": [0], \"series\": [{\"data\": [{\"stat\": [\"count\", \"mean\", \"std\", \"min\", \"25%\", \"50%\", \"75%\", \"max\"], \"value\": [10000.0, 28.8176, 14.506480415228332, 7.0, 15.0, 31.0, 41.0, 92.0]}]}]}, {\"name\": \"SerumInsulin\", \"run_id\": \"8985fd8e-6d55-4bbe-82a9-ad07b2e5035d\", \"categories\": [0], \"series\": [{\"data\": [{\"stat\": [\"count\", \"mean\", \"std\", \"min\", \"25%\", \"50%\", \"75%\", \"max\"], \"value\": [10000.0, 139.2436, 133.77791937465278, 14.0, 39.0, 85.0, 197.0, 796.0]}]}]}, {\"name\": \"BMI\", \"run_id\": \"8985fd8e-6d55-4bbe-82a9-ad07b2e5035d\", \"categories\": [0], \"series\": [{\"data\": [{\"stat\": [\"count\", \"mean\", \"std\", \"min\", \"25%\", \"50%\", \"75%\", \"max\"], \"value\": [10000.0, 31.56702174359113, 9.804365693559113, 18.20080735, 21.247426835, 31.922420785, 39.3289214475, 56.03462763]}]}]}], \"run_logs\": \"\\nRun is completed.\", \"graph\": {}, \"widget_settings\": {\"childWidgetDisplay\": \"popup\", \"send_telemetry\": false, \"log_level\": \"INFO\", \"sdk_version\": \"1.28.0\"}, \"loading\": false}"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 17,
+      "metadata": {
+        "gather": {
+          "logged": 1623598664589
+        }
+      },
+      "id": "c5fcd365"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "![image.png](attachment:666a6b13-925e-412a-a2b9-ec5fbaa5cd6b.png)"
+      ],
+      "metadata": {},
+      "id": "5c02254b"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "#### Azure MLスタジオで詳細を表示\n",
+        "\n",
+        "RunDetailsウィジェットには、Azure MLスタジオで実行の詳細を表示するリンクが含まれていることに注意する。\n"
+      ],
+      "metadata": {},
+      "id": "07a492b5"
+    }
+  ],
+  "metadata": {
+    "kernel_info": {
+      "name": "python3"
+    },
+    "kernelspec": {
+      "name": "python3",
+      "language": "python",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python",
+      "version": "3.6.9",
+      "mimetype": "text/x-python",
+      "codemirror_mode": {
+        "name": "ipython",
+        "version": 3
+      },
+      "pygments_lexer": "ipython3",
+      "nbconvert_exporter": "python",
+      "file_extension": ".py"
+    },
+    "microsoft": {
+      "host": {
+        "AzureML": {
+          "notebookHasBeenCompleted": true
+        }
+      }
+    },
+    "nteract": {
+      "version": "nteract-front-end@1.0.0"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}

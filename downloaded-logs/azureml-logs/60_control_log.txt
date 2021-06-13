@@ -1,0 +1,249 @@
+[2021-06-13T16:16:04.746190] Entering context manager injector.
+[2021-06-13T16:16:05.534536] Using urllib.request Python 3.0 or later
+Streaming log file azureml-logs/60_control_log.txt
+Starting the daemon thread to refresh tokens in background for process with pid = 23916
+Running: ['/bin/bash', '/tmp/azureml_runs/mslearn-diabetes_1623600963_8a4addc5/azureml-environment-setup/conda_env_checker.sh']
+Materialized conda environment not found on target: /home/azureuser/.azureml/envs/azureml_b94bcced69f148938846998dee207042
+
+
+[2021-06-13T16:16:05.648864] Logging experiment preparation status in history service.
+Running: ['/bin/bash', '/tmp/azureml_runs/mslearn-diabetes_1623600963_8a4addc5/azureml-environment-setup/conda_env_builder.sh']
+Running: ['conda', '--version']
+conda 4.10.1
+
+Creating conda environment...
+Running: ['conda', 'env', 'create', '-p', '/home/azureuser/.azureml/envs/azureml_b94bcced69f148938846998dee207042', '-f', 'azureml-environment-setup/mutated_conda_dependencies.yml']
+Collecting package metadata (repodata.json): ...working... done
+Solving environment: ...working... done
+
+Downloading and Extracting Packages
+tk-8.6.10            | 3.2 MB    | ########## | 100% 
+libffi-3.2.1         | 52 KB     | ########## | 100% 
+libstdcxx-ng-9.1.0   | 4.0 MB    | ########## | 100% 
+zlib-1.2.11          | 120 KB    | ########## | 100% 
+sqlite-3.23.1        | 1.5 MB    | ########## | 100% 
+xz-5.2.5             | 438 KB    | ########## | 100% 
+libedit-3.1          | 171 KB    | ########## | 100% 
+openssl-1.0.2u       | 3.1 MB    | ########## | 100% 
+ncurses-6.0          | 907 KB    | ########## | 100% 
+readline-7.0         | 387 KB    | ########## | 100% 
+certifi-2020.6.20    | 160 KB    | ########## | 100% 
+pip-20.2.4           | 2.0 MB    | ########## | 100% 
+setuptools-50.3.0    | 891 KB    | ########## | 100% 
+ca-certificates-2020 | 128 KB    | ########## | 100% 
+wheel-0.35.1         | 36 KB     | ########## | 100% 
+libgcc-ng-9.1.0      | 8.1 MB    | ########## | 100% 
+python-3.6.2         | 27.0 MB   | ########## | 100% 
+Preparing transaction: ...working... done
+Verifying transaction: ...working... done
+Executing transaction: ...working... done
+Installing pip dependencies: ...working... Ran pip subprocess with arguments:
+['/home/azureuser/.azureml/envs/azureml_b94bcced69f148938846998dee207042/bin/python', '-m', 'pip', 'install', '-U', '-r', '/tmp/azureml_runs/mslearn-diabetes_1623600963_8a4addc5/azureml-environment-setup/condaenv.jfb527j6.requirements.txt']
+Pip subprocess output:
+Collecting azureml-defaults~=1.28.0
+  Downloading azureml_defaults-1.28.0-py3-none-any.whl (3.1 kB)
+Collecting werkzeug<=1.0.1,>=0.16.1
+  Downloading Werkzeug-1.0.1-py2.py3-none-any.whl (298 kB)
+Collecting azureml-dataset-runtime[fuse]~=1.28.0
+  Downloading azureml_dataset_runtime-1.28.0-py3-none-any.whl (3.5 kB)
+Collecting azureml-model-management-sdk==1.0.1b6.post1
+  Downloading azureml_model_management_sdk-1.0.1b6.post1-py2.py3-none-any.whl (130 kB)
+Collecting applicationinsights>=0.11.7
+  Downloading applicationinsights-0.11.10-py2.py3-none-any.whl (55 kB)
+Collecting json-logging-py==0.2
+  Downloading json-logging-py-0.2.tar.gz (3.6 kB)
+Collecting configparser==3.7.4
+  Downloading configparser-3.7.4-py2.py3-none-any.whl (22 kB)
+Collecting azureml-core~=1.28.0
+  Downloading azureml_core-1.28.0.post1-py3-none-any.whl (2.2 MB)
+Collecting gunicorn==20.1.0
+  Downloading gunicorn-20.1.0-py3-none-any.whl (79 kB)
+Collecting flask==1.0.3
+  Downloading Flask-1.0.3-py2.py3-none-any.whl (92 kB)
+Collecting numpy!=1.19.3; sys_platform == "linux"
+  Downloading numpy-1.19.5-cp36-cp36m-manylinux2010_x86_64.whl (14.8 MB)
+Collecting azureml-dataprep<2.16.0a,>=2.15.0a
+  Downloading azureml_dataprep-2.15.1-py3-none-any.whl (39.4 MB)
+Collecting pyarrow<4.0.0,>=0.17.0
+  Downloading pyarrow-3.0.0-cp36-cp36m-manylinux2014_x86_64.whl (20.7 MB)
+Collecting fusepy<4.0.0,>=3.0.1; extra == "fuse"
+  Downloading fusepy-3.0.1.tar.gz (11 kB)
+Collecting adal>=0.4.5
+  Downloading adal-1.2.7-py2.py3-none-any.whl (55 kB)
+Collecting pytz>=2017.2
+  Downloading pytz-2021.1-py2.py3-none-any.whl (510 kB)
+Collecting liac-arff>=2.1.1
+  Downloading liac-arff-2.5.0.tar.gz (13 kB)
+Collecting pandas>=0.20.2
+  Downloading pandas-1.1.5-cp36-cp36m-manylinux1_x86_64.whl (9.5 MB)
+Collecting python-dateutil>=2.5.3
+  Downloading python_dateutil-2.8.1-py2.py3-none-any.whl (227 kB)
+Collecting six>=1.10
+  Downloading six-1.16.0-py2.py3-none-any.whl (11 kB)
+Collecting requests>=2.17.3
+  Downloading requests-2.25.1-py2.py3-none-any.whl (61 kB)
+Collecting dill>=0.2.7.1
+  Downloading dill-0.3.3-py2.py3-none-any.whl (81 kB)
+Collecting contextlib2<1.0.0
+  Downloading contextlib2-0.6.0.post1-py2.py3-none-any.whl (9.8 kB)
+Collecting backports.tempfile
+  Downloading backports.tempfile-1.0-py2.py3-none-any.whl (4.4 kB)
+Collecting ndg-httpsclient
+  Downloading ndg_httpsclient-0.5.1-py3-none-any.whl (34 kB)
+Collecting msrestazure>=0.4.33
+  Downloading msrestazure-0.6.4-py2.py3-none-any.whl (40 kB)
+Collecting azure-mgmt-containerregistry>=2.0.0
+  Downloading azure_mgmt_containerregistry-8.0.0-py2.py3-none-any.whl (663 kB)
+Collecting pyopenssl<21.0.0
+  Downloading pyOpenSSL-20.0.1-py2.py3-none-any.whl (54 kB)
+Collecting azure-mgmt-storage<16.0.0,>=1.5.0
+  Downloading azure_mgmt_storage-11.2.0-py2.py3-none-any.whl (547 kB)
+Collecting ruamel.yaml<0.17.5,>=0.15.35
+  Downloading ruamel.yaml-0.17.4-py3-none-any.whl (101 kB)
+Collecting pathspec<1.0.0
+  Downloading pathspec-0.8.1-py2.py3-none-any.whl (28 kB)
+Collecting jmespath<1.0.0
+  Downloading jmespath-0.10.0-py2.py3-none-any.whl (24 kB)
+Collecting jsonpickle<3.0.0
+  Downloading jsonpickle-2.0.0-py2.py3-none-any.whl (37 kB)
+Collecting msrest<1.0.0,>=0.5.1
+  Downloading msrest-0.6.21-py2.py3-none-any.whl (85 kB)
+Collecting azure-mgmt-authorization<1.0.0,>=0.40.0
+  Downloading azure_mgmt_authorization-0.61.0-py2.py3-none-any.whl (94 kB)
+Collecting azure-graphrbac<1.0.0,>=0.40.0
+  Downloading azure_graphrbac-0.61.1-py2.py3-none-any.whl (141 kB)
+Collecting azure-mgmt-keyvault<7.0.0,>=0.40.0
+  Downloading azure_mgmt_keyvault-2.2.0-py2.py3-none-any.whl (89 kB)
+Collecting azure-common<2.0.0,>=1.1.12
+  Downloading azure_common-1.1.27-py2.py3-none-any.whl (12 kB)
+Collecting docker<5.0.0
+  Downloading docker-4.4.4-py2.py3-none-any.whl (147 kB)
+Collecting PyJWT<3.0.0
+  Downloading PyJWT-2.1.0-py3-none-any.whl (16 kB)
+Collecting urllib3>=1.23
+  Downloading urllib3-1.26.5-py2.py3-none-any.whl (138 kB)
+Collecting cryptography!=1.9,!=2.0.*,!=2.1.*,!=2.2.*,<4.0.0
+  Downloading cryptography-3.4.7-cp36-abi3-manylinux2014_x86_64.whl (3.2 MB)
+Collecting azure-mgmt-resource<15.0.0,>=1.2.1
+  Downloading azure_mgmt_resource-13.0.0-py2.py3-none-any.whl (1.3 MB)
+Collecting SecretStorage<4.0.0
+  Downloading SecretStorage-3.3.1-py3-none-any.whl (15 kB)
+Requirement already satisfied, skipping upgrade: setuptools>=3.0 in /home/azureuser/.azureml/envs/azureml_b94bcced69f148938846998dee207042/lib/python3.6/site-packages (from gunicorn==20.1.0->azureml-defaults~=1.28.0->-r /tmp/azureml_runs/mslearn-diabetes_1623600963_8a4addc5/azureml-environment-setup/condaenv.jfb527j6.requirements.txt (line 1)) (50.3.0.post20201006)
+Collecting itsdangerous>=0.24
+  Downloading itsdangerous-2.0.1-py3-none-any.whl (18 kB)
+Collecting Jinja2>=2.10
+  Downloading Jinja2-3.0.1-py3-none-any.whl (133 kB)
+Collecting click>=5.1
+  Downloading click-8.0.1-py3-none-any.whl (97 kB)
+Collecting azure-identity<1.5.0,>=1.2.0
+  Downloading azure_identity-1.4.1-py2.py3-none-any.whl (86 kB)
+Collecting azureml-dataprep-native<34.0.0,>=33.0.0
+  Downloading azureml_dataprep_native-33.0.0-cp36-cp36m-manylinux1_x86_64.whl (1.3 MB)
+Collecting cloudpickle<2.0.0,>=1.1.0
+  Downloading cloudpickle-1.6.0-py3-none-any.whl (23 kB)
+Collecting dotnetcore2<3.0.0,>=2.1.14
+  Downloading dotnetcore2-2.1.21-py3-none-manylinux1_x86_64.whl (28.7 MB)
+Collecting azureml-dataprep-rslex<1.14.0a,>=1.13.0dev0
+  Downloading azureml_dataprep_rslex-1.13.0-cp36-cp36m-manylinux2010_x86_64.whl (9.8 MB)
+Collecting idna<3,>=2.5
+  Downloading idna-2.10-py2.py3-none-any.whl (58 kB)
+Requirement already satisfied, skipping upgrade: certifi>=2017.4.17 in /home/azureuser/.azureml/envs/azureml_b94bcced69f148938846998dee207042/lib/python3.6/site-packages (from requests>=2.17.3->azureml-model-management-sdk==1.0.1b6.post1->azureml-defaults~=1.28.0->-r /tmp/azureml_runs/mslearn-diabetes_1623600963_8a4addc5/azureml-environment-setup/condaenv.jfb527j6.requirements.txt (line 1)) (2020.6.20)
+Collecting chardet<5,>=3.0.2
+  Downloading chardet-4.0.0-py2.py3-none-any.whl (178 kB)
+Collecting backports.weakref
+  Downloading backports.weakref-1.0.post1-py2.py3-none-any.whl (5.2 kB)
+Collecting pyasn1>=0.1.1
+  Downloading pyasn1-0.4.8-py2.py3-none-any.whl (77 kB)
+Collecting azure-mgmt-core<2.0.0,>=1.2.0
+  Downloading azure_mgmt_core-1.2.2-py2.py3-none-any.whl (21 kB)
+Collecting ruamel.yaml.clib>=0.1.2; platform_python_implementation == "CPython" and python_version < "3.10"
+  Downloading ruamel.yaml.clib-0.2.2-cp36-cp36m-manylinux1_x86_64.whl (549 kB)
+Collecting importlib-metadata; python_version < "3.8"
+  Downloading importlib_metadata-4.5.0-py3-none-any.whl (17 kB)
+Collecting isodate>=0.6.0
+  Downloading isodate-0.6.0-py2.py3-none-any.whl (45 kB)
+Collecting requests-oauthlib>=0.5.0
+  Downloading requests_oauthlib-1.3.0-py2.py3-none-any.whl (23 kB)
+Collecting websocket-client>=0.32.0
+  Downloading websocket_client-1.1.0-py2.py3-none-any.whl (68 kB)
+Collecting cffi>=1.12
+  Downloading cffi-1.14.5-cp36-cp36m-manylinux1_x86_64.whl (401 kB)
+Collecting jeepney>=0.6
+  Downloading jeepney-0.6.0-py3-none-any.whl (45 kB)
+Collecting MarkupSafe>=2.0
+  Downloading MarkupSafe-2.0.1-cp36-cp36m-manylinux2010_x86_64.whl (30 kB)
+Collecting azure-core<2.0.0,>=1.0.0
+  Downloading azure_core-1.15.0-py2.py3-none-any.whl (138 kB)
+Collecting msal<2.0.0,>=1.3.0
+  Downloading msal-1.12.0-py2.py3-none-any.whl (66 kB)
+Collecting msal-extensions~=0.2.2
+  Downloading msal_extensions-0.2.2-py2.py3-none-any.whl (15 kB)
+Collecting distro>=1.2.0
+  Downloading distro-1.5.0-py2.py3-none-any.whl (18 kB)
+Collecting typing-extensions>=3.6.4; python_version < "3.8"
+  Downloading typing_extensions-3.10.0.0-py3-none-any.whl (26 kB)
+Collecting zipp>=0.5
+  Downloading zipp-3.4.1-py3-none-any.whl (5.2 kB)
+Collecting oauthlib>=3.0.0
+  Downloading oauthlib-3.1.1-py2.py3-none-any.whl (146 kB)
+Collecting pycparser
+  Downloading pycparser-2.20-py2.py3-none-any.whl (112 kB)
+Collecting portalocker~=1.0; platform_system != "Windows"
+  Downloading portalocker-1.7.1-py2.py3-none-any.whl (10 kB)
+Building wheels for collected packages: json-logging-py, fusepy, liac-arff
+  Building wheel for json-logging-py (setup.py): started
+  Building wheel for json-logging-py (setup.py): finished with status 'done'
+  Created wheel for json-logging-py: filename=json_logging_py-0.2-py3-none-any.whl size=3924 sha256=8752c066e66f71c4a8f26e7a59a976c77644311ce311c3d39f44783c617ce695
+  Stored in directory: /home/azureuser/.cache/pip/wheels/e2/1d/52/535a274b9c2ce7d4064838f2bdb62013801281ef7d7f21e2ee
+  Building wheel for fusepy (setup.py): started
+  Building wheel for fusepy (setup.py): finished with status 'done'
+  Created wheel for fusepy: filename=fusepy-3.0.1-py3-none-any.whl size=10504 sha256=31d1c1177d4e3bfad02453ca27e6bc1bf902930708cd70823e0dce3c28b9534e
+  Stored in directory: /home/azureuser/.cache/pip/wheels/21/5c/83/1dd7e8a232d12227e5410120f4374b33adeb4037473105b079
+  Building wheel for liac-arff (setup.py): started
+  Building wheel for liac-arff (setup.py): finished with status 'done'
+  Created wheel for liac-arff: filename=liac_arff-2.5.0-py3-none-any.whl size=11730 sha256=330abd4cbaae70bd99694421c269b4d6452a68776cf5b415b6e50d4b5ab9b277
+  Stored in directory: /home/azureuser/.cache/pip/wheels/53/ba/da/8562a6a6dbb428fd1ecc21053106df3948645cd991958f669b
+Successfully built json-logging-py fusepy liac-arff
+Installing collected packages: werkzeug, numpy, six, idna, urllib3, chardet, requests, azure-core, PyJWT, pycparser, cffi, cryptography, msal, portalocker, msal-extensions, azure-identity, azureml-dataprep-native, cloudpickle, distro, dotnetcore2, azureml-dataprep-rslex, azureml-dataprep, pyarrow, fusepy, azureml-dataset-runtime, python-dateutil, adal, pytz, liac-arff, pandas, dill, azureml-model-management-sdk, applicationinsights, json-logging-py, configparser, contextlib2, backports.weakref, backports.tempfile, pyopenssl, pyasn1, ndg-httpsclient, isodate, oauthlib, requests-oauthlib, msrest, msrestazure, azure-mgmt-core, azure-common, azure-mgmt-containerregistry, azure-mgmt-storage, ruamel.yaml.clib, ruamel.yaml, pathspec, jmespath, typing-extensions, zipp, importlib-metadata, jsonpickle, azure-mgmt-authorization, azure-graphrbac, azure-mgmt-keyvault, websocket-client, docker, azure-mgmt-resource, jeepney, SecretStorage, azureml-core, gunicorn, itsdangerous, MarkupSafe, Jinja2, click, flask, azureml-defaults
+Successfully installed Jinja2-3.0.1 MarkupSafe-2.0.1 PyJWT-2.1.0 SecretStorage-3.3.1 adal-1.2.7 applicationinsights-0.11.10 azure-common-1.1.27 azure-core-1.15.0 azure-graphrbac-0.61.1 azure-identity-1.4.1 azure-mgmt-authorization-0.61.0 azure-mgmt-containerregistry-8.0.0 azure-mgmt-core-1.2.2 azure-mgmt-keyvault-2.2.0 azure-mgmt-resource-13.0.0 azure-mgmt-storage-11.2.0 azureml-core-1.28.0.post1 azureml-dataprep-2.15.1 azureml-dataprep-native-33.0.0 azureml-dataprep-rslex-1.13.0 azureml-dataset-runtime-1.28.0 azureml-defaults-1.28.0 azureml-model-management-sdk-1.0.1b6.post1 backports.tempfile-1.0 backports.weakref-1.0.post1 cffi-1.14.5 chardet-4.0.0 click-8.0.1 cloudpickle-1.6.0 configparser-3.7.4 contextlib2-0.6.0.post1 cryptography-3.4.7 dill-0.3.3 distro-1.5.0 docker-4.4.4 dotnetcore2-2.1.21 flask-1.0.3 fusepy-3.0.1 gunicorn-20.1.0 idna-2.10 importlib-metadata-4.5.0 isodate-0.6.0 itsdangerous-2.0.1 jeepney-0.6.0 jmespath-0.10.0 json-logging-py-0.2 jsonpickle-2.0.0 liac-arff-2.5.0 msal-1.12.0 msal-extensions-0.2.2 msrest-0.6.21 msrestazure-0.6.4 ndg-httpsclient-0.5.1 numpy-1.19.5 oauthlib-3.1.1 pandas-1.1.5 pathspec-0.8.1 portalocker-1.7.1 pyarrow-3.0.0 pyasn1-0.4.8 pycparser-2.20 pyopenssl-20.0.1 python-dateutil-2.8.1 pytz-2021.1 requests-2.25.1 requests-oauthlib-1.3.0 ruamel.yaml-0.17.4 ruamel.yaml.clib-0.2.2 six-1.16.0 typing-extensions-3.10.0.0 urllib3-1.26.5 websocket-client-1.1.0 werkzeug-1.0.1 zipp-3.4.1
+
+done
+#
+# To activate this environment, use
+#
+#     $ conda activate /home/azureuser/.azureml/envs/azureml_b94bcced69f148938846998dee207042
+#
+# To deactivate an active environment, use
+#
+#     $ conda deactivate
+
+
+
+
+Found the following conda default values for envs_dirs:
+
+envs_dirs:
+  - /anaconda/envs
+  - /home/azureuser/.conda/envs
+
+Appending AzureML conda envs directory: /home/azureuser/.azureml/envs to the default envs_dirs listed above.
+
+
+
+Running: ['/home/azureuser/.azureml/envs/azureml_b94bcced69f148938846998dee207042/bin/python', 'azureml-setup/run_script.py', '/home/azureuser/.azureml/envs/azureml_b94bcced69f148938846998dee207042/bin/python', 'azureml-setup/context_manager_injector.py', '-i', 'ProjectPythonPath:context_managers.ProjectPythonPath', '-i', 'RunHistory:context_managers.RunHistory', '-i', 'TrackUserError:context_managers.TrackUserError', 'diabetes_experiment.py']
+[2021-06-13T16:17:22.225313] Logging experiment running status in history service.
+Streaming log file azureml-logs/70_driver_log.txt
+Starting the daemon thread to refresh tokens in background for process with pid = 24786
+Script process exited with code 0
+Uploading driver log...
+Finalizing run...
+[2021-06-13T16:17:30.781083] get vm size and vm region successfully.
+[2021-06-13T16:17:30.792893] get compute meta data successfully.
+[2021-06-13T16:17:30.926446] post artifact meta request successfully.
+[2021-06-13T16:17:31.033968] upload compute record artifact successfully.
+
+Script process exited with code 0
+
+
+
+Uploading control log...
