@@ -121,13 +121,7 @@
         "## Azure ML Studioを見る\n",
         "\n",
         "Azure MLスタジオでは、ワークスペースを操作するための専用Webポータルを提供している。  \n",
-        "スタジオを起動することで、Azure MLスタジオへ移動することができる。\n",
-        "\n",
-        "![image.png](attachment:173e5b4c-7fd6-4cff-914c-8fcb56792270.png)\n",
-        "\n",
-        "以下のページを使って、ワークスペースのリソースを管理することができる。\n",
-        "\n",
-        "![image.png](attachment:a5b4c642-5937-4e5d-b1cc-4236e8efb732.png)"
+        "スタジオを起動することで、Azure MLスタジオへ移動することができ、ワークスペースのリソースを管理することができる。"
       ],
       "metadata": {},
       "id": "64709699-e651-4fd1-89f7-0d29c6e6ba57"
@@ -138,8 +132,6 @@
         "## コンピューティングインスタンスの作成\n",
         "\n",
         "Azure MLのメリットの一つは、実験やトレーニングスクリプトを大規模に実行できるクラウドベースのコンピューティングを作成できること。\n",
-        "\n",
-        "![image.png](attachment:56c1da4c-29c0-4267-ae7c-eeb18ee19915.png)\n",
         "\n",
         "1. **コンピューティング**を表示する。  \n",
         "ここでは、データサイエンス活動のためのコンピューティングリソースを管理する。作成できるリソースは4種類\n",
@@ -157,8 +149,6 @@
         "2. コンピューティングインスタンスより、新しいコンピューティングインスタンスを追加する。  \n",
         "このインスタンスは、ノートブックでコードを実行するためのワークステーションとして使用する。\n",
         "\n",
-        "![image.png](attachment:c7ab5592-8adb-418b-8bb3-83003a71067b.png)\n",
-        "\n",
         "3. コンピューティングが作成されるまで待つ。\n"
       ],
       "metadata": {},
@@ -175,15 +165,9 @@
         "\n",
         "1. Azure MLスタジオで**Notebooks**を開く\n",
         "\n",
-        "![image.png](attachment:09a8a9bb-1706-4af1-b662-dfb2c3c8dca4.png)\n",
-        "\n",
         "2. ターミナルを開き、`git`コマンドでノートブックのクローンを取得する\n",
         "\n",
-        "![image.png](attachment:59a8a356-5dd8-487d-ae57-ba0ff1f808a0.png)\n",
-        "\n",
-        "3. ターミナルを閉じ、ファイルペイン上で更新してからノートブックを選択することで、ノートブックを開くことができる。\n",
-        "\n",
-        "![image.png](attachment:80a107b1-25cd-47b1-920e-b76e44865517.png)"
+        "3. ターミナルを閉じ、ファイルペイン上で更新してからノートブックを選択することで、ノートブックを開くことができる。"
       ],
       "metadata": {},
       "id": "fb16f769-e2c8-4957-841e-48f0c1d1fb2e"
@@ -373,16 +357,15 @@
       "id": "5071f078-6ce7-4866-b06d-1c3607cbd55e"
     },
     {
-      "cell_type": "code",
-      "source": [],
-      "outputs": [],
-      "execution_count": null,
+      "cell_type": "markdown",
+      "source": [
+        "## Azure MLのツールとインターフェイス\n",
+        "\n",
+        "Azure MLにはクラウドベースのサービスが用意されており、その使用方法には柔軟性がある。  \n",
+        "Azure ML用に特別に設計されたユーザインターフェイスがある。  \n",
+        "また、プログラムインターフェイスを使用してワークスペースリソースを管理したり、機械学習の操作を実行したりすることができる。\n"
+      ],
       "metadata": {
-        "collapsed": true,
-        "jupyter": {
-          "source_hidden": false,
-          "outputs_hidden": false
-        },
         "nteract": {
           "transient": {
             "deleting": false
@@ -390,6 +373,177 @@
         }
       },
       "id": "1cf84b24-104b-4f8b-b78d-7c7ca13c9442"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "### Azure MLスタジオ\n",
+        "\n",
+        "Azure MLワークスペース内の資産をAzureポータル上で管理できるが、  \n",
+        "これはAzureのすべての種類のリソースを管理するための一般的なインターフェイスであるため、データ分析に関連するその他のユーザは、  \n",
+        "より焦点を絞った専用インターフェイスの使用を推奨。\n",
+        "\n",
+        "Azure MLスタジオは、Azure MLワークスペースを管理するためのWebベースツールで、  \n",
+        "これを使用してワークスペース内のすべての資産を作成、管理、表示できる。また、次のグラフィカルツールが用意されている。\n",
+        "\n",
+        "- デザイナー\n",
+        "    - コードなしの機械学習モデル開発のためのインターフェイス\n",
+        "- 自動機械学習\n",
+        "    - データに対して最適なモデルを見つけるため、アルゴリズムとデータ前処理手法を組み合わせて使用しモデルをトレーニングできる  \n",
+        "    ウィザードインターフェイス"
+      ],
+      "metadata": {
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        }
+      },
+      "id": "201ec832-1d3f-4340-ad0d-a5f07e571846"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "### Azure ML SDK\n",
+        "Azure MLスタジオのようなグラフィカルインターフェイスを使用すると、機械学習資産を簡単に作成および管理できるが、  \n",
+        "多くの場合、リソースの管理にコードベースのアプローチを使用すると便利で、管理するためのスクリプトを記述することで、次のことができる。\n",
+        "\n",
+        "- 好みの開発環境から機械学習を実行できる\n",
+        "- リソースの作成と構成を自動化し、反復可能にする\n",
+        "- 複数の環境(開発、テスト、運用など)でレプリケートする必要があるリソースの一貫性を確保する\n",
+        "- 継続的インテグレーション/継続的デプロイ(CI/CD)パイプラインなどの開発者の運用(DevOps)ワークフローに機械学習のリソース構成を組み込むことができる。\n",
+        "\n",
+        "Azure MLにより、Azure MLワークスペースでリソースを作成、管理、使用するために使用できる、PythonおよびR用のソフトウェア開発キット(SDK)が提供される。"
+      ],
+      "metadata": {
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        }
+      },
+      "id": "99554c0a-00a3-4c4e-a0fc-27a2e101f0fe"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "### Azure ML SDK for Pythonのインストール\n",
+        "\n",
+        "`pip`コマンドを用いて、以下のようにインストールできる。\n",
+        "\n",
+        "```\n",
+        "pip install azureml-sdk\n",
+        "```\n",
+        "SDKはPython pipユーティリティを使用してインストールされ、メインの**azureml-sdk**パッケージと、特殊な昨日を含む多くの補助的なパッケージで構成される。  \n",
+        "例えば、**azureml-widgets**パッケージでは、jupyter notebook環境で対話型ウィジェットのサポートが提供される。\n"
+      ],
+      "metadata": {
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        }
+      },
+      "id": "fe5f85fe-32de-4517-9d2f-bb281888d418"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "### ワークスペースへの接続\n",
+        "\n",
+        "SDKパッケージをpython環境にインストールできたら、ワークスペースに接続して機械学習の操作を実行するためのコードを記述できる。  \n",
+        "ワークスペースに接続する最も簡単な方法は、以下のようにAzureサブスク、リソースグループ、ワークスペースの詳細を含むワークスペース構成ファイルを使用すること。\n",
+        "\n",
+        "> ※以下のjsonファイルは、概要ページからダウンロードしたもの"
+      ],
+      "metadata": {
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        }
+      },
+      "id": "855cadd2-4576-4c4a-8d7c-6d7e83b0bb2f"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "```:json\n",
+        "{\n",
+        "    \"id\": \"/subscriptions/153404fd-72ab-4092-b50e-de490c5509fc/resourceGroups/20210613/providers/Microsoft.MachineLearningServices/workspaces/20210613\",\n",
+        "    \"name\": \"20210613\",\n",
+        "    \"type\": \"Microsoft.MachineLearningServices/workspaces\",\n",
+        "    \"location\": \"westus2\",\n",
+        "    \"tags\": {},\n",
+        "    \"etag\": null,\n",
+        "    \"properties\": {\n",
+        "        \"friendlyName\": \"20210613\",\n",
+        "        \"description\": \"\",\n",
+        "        \"storageAccount\": \"/subscriptions/153404fd-72ab-4092-b50e-de490c5509fc/resourcegroups/20210613/providers/microsoft.storage/storageaccounts/202106138491592323\",\n",
+        "        \"containerRegistry\": \"\",\n",
+        "        \"keyVault\": \"/subscriptions/153404fd-72ab-4092-b50e-de490c5509fc/resourcegroups/20210613/providers/microsoft.keyvault/vaults/a202106137570553126\",\n",
+        "        \"applicationInsights\": \"/subscriptions/153404fd-72ab-4092-b50e-de490c5509fc/resourcegroups/20210613/providers/microsoft.insights/components/202106137897442529\",\n",
+        "        \"hbiWorkspace\": false,\n",
+        "        \"tenantId\": \"5456e8d8-0223-4619-ba5b-e313627da53d\",\n",
+        "        \"imageBuildCompute\": \"\",\n",
+        "        \"provisioningState\": \"Succeeded\",\n",
+        "        \"creationTime\": \"2021-06-13T08:30:48.5558351+00:00\",\n",
+        "        \"notebookInfo\": {\n",
+        "            \"resourceId\": \"ed8e6e4a20b24598986771c9c7468e34\",\n",
+        "            \"fqdn\": \"ml-20210613-westus2-322f90dd-b503-46f1-8d45-68f1641a9197.notebooks.azure.net\",\n",
+        "            \"isPrivateLinkEnabled\": false,\n",
+        "            \"notebookPreparationError\": null\n",
+        "        },\n",
+        "        \"storageHnsEnabled\": false,\n",
+        "        \"workspaceId\": \"322f90dd-b503-46f1-8d45-68f1641a9197\",\n",
+        "        \"linkedModelInventoryArmId\": null,\n",
+        "        \"privateLinkCount\": 0,\n",
+        "        \"allowPublicAccessWhenBehindVnet\": false,\n",
+        "        \"discoveryUrl\": \"https://westus2.api.azureml.ms/discovery\",\n",
+        "        \"sdkTelemetryAppInsightsKey\": \"19f24253-9564-406c-9a1e-a48a21b145aa\"\n",
+        "    },\n",
+        "    \"identity\": {\n",
+        "        \"type\": \"SystemAssigned\",\n",
+        "        \"principalId\": \"18459ee1-c609-4ff2-98c6-ad94eb5ac6c1\",\n",
+        "        \"tenantId\": \"5456e8d8-0223-4619-ba5b-e313627da53d\"\n",
+        "    },\n",
+        "    \"sku\": {\n",
+        "        \"name\": \"Basic\",\n",
+        "        \"tier\": \"Basic\"\n",
+        "    },\n",
+        "    \"systemData\": {\n",
+        "        \"createdAt\": \"2021-06-13T08:30:45.1488264Z\",\n",
+        "        \"createdBy\": \"tsutayan@gmail.com\",\n",
+        "        \"createdByType\": \"User\",\n",
+        "        \"lastModifiedAt\": \"2021-06-13T08:30:45.1488264Z\",\n",
+        "        \"lastModifiedBy\": \"tsutayan@gmail.com\",\n",
+        "        \"lastModifiedByType\": \"User\"\n",
+        "    }\n",
+        "}\n",
+        "```"
+      ],
+      "metadata": {
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        }
+      },
+      "id": "407a836e-e8b2-4d5e-8c96-54b5a2ac4fd9"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "構成ファイルを"
+      ],
+      "metadata": {
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        }
+      },
+      "id": "aee35677-f5b6-48b2-977f-40f619b13ebe"
     }
   ],
   "metadata": {
