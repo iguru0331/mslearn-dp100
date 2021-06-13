@@ -1,0 +1,225 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# 10.Azure ML SDKの概要\n",
+        "\n",
+        "## Azure Machine Learning ワークスペース\n",
+        "\n",
+        "ワークスペースは、機械学習ワークロードに関連付けられた実験、データ、コンピューティング先およびその他の資産のコンテキスト。\n",
+        "\n",
+        "### Machine Learning資産用のワークスペース\n",
+        "\n",
+        "ワークスペースは、関連する一連の機械学習リソースの境界を定義するもの。  \n",
+        "ワークスペースを使用することで、プロジェクト、デプロイ環境(テストと運用など)、チーム、またはその他の編成の原則に基づいて機械学習リソースをグループ化できる。\n",
+        "\n",
+        "ワークスペース内には以下の資産がある。\n",
+        "\n",
+        "- 開発、トレーニング、デプロイのためのコンピューティング先\n",
+        "- 実験及びモデルトレーニング用のデータ\n",
+        "- 共有コードとドキュメントを含むノートブック\n",
+        "- 実験(履歴、ログに記録されたメトリック、出力含む)\n",
+        "- トレーニング済みのモデル\n",
+        "\n",
+        "### Azureリソースとしてのワークスペース\n",
+        "\n",
+        "ワークスペースはAzureリソースなので、ワークスペースをsupportするために必要なその他の関連するAzureリソースとともに、  \n",
+        "Azureサブスクリプションのリソースグループ内に定義される。\n",
+        "\n",
+        "![image.png](attachment:a9acd393-d1d5-4f58-98a2-e01e0390269a.png)\n",
+        "\n",
+        "ワークスペースとともに作成されるAzureリソースは次のものがある。\n",
+        "\n",
+        "- ストレージアカウント\n",
+        "    - ワークスペースで使用されるファイルと、実験およびモデルトレーニング用のデータを格納するために使用される\n",
+        "- Application Insights\n",
+        "    - ワークスペース内で予測サービスを監視するために使用される\n",
+        "- Azure Key Vault\n",
+        "    - ワークスペースで使用される認証キーや資格情報などのシークレットを管理するために使用される\n",
+        "- コンテナーレジストリ\n",
+        "    - デプロイされたモデルのコンテナーを管理するために必要に応じて作成される\n",
+        "\n",
+        "### ロールベースのアクセス制御\n",
+        "\n",
+        "ワークスペースにはロールベースの承認ポリシーを割り当てることができる。  \n",
+        "これにより、特定のAzure Active Directoryプリンシパルが実行できるアクションを制限するアクセス許可を管理できる。\n",
+        "\n",
+        "### ワークスペースの作成\n",
+        "\n",
+        "以下の方法でワークスペースを作成できる。\n",
+        "\n",
+        "- Azureポータルで、サブスクリプション、リソースグループ、ワークスペース名を指定して、新しいMachine Learningリソースを作成。\n",
+        "- Azure ML Python SDKを使用して、ワークスペースを作成するコードを実行する。  \n",
+        "たとえば、次のコードによって`aml-workspace`という名前のワークスペースが作成される。  \n",
+        "※Azure ML SDK for Pythonがインストールされ、有効なサブスクリプションIDが指定されていることを前提としている。"
+      ],
+      "metadata": {},
+      "id": "acf1a33b-a8e3-4eed-bc40-e4652c1b7c69"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "```\n",
+        "from azureml.core import Workspace\n",
+        "    \n",
+        "    ws = Workspace.create(name='aml-workspace', \n",
+        "                      subscription_id='123456-abc-123...',\n",
+        "                      resource_group='aml-resources',\n",
+        "                      create_resource_group=True,\n",
+        "                      location='eastus'\n",
+        "                     )\n",
+        "```"
+      ],
+      "metadata": {},
+      "id": "37d4a774-e2d1-4cdf-9755-3ecd8388948e"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "- Azure ML CLI拡張機能を含むAzure CLIを使用する。  \n",
+        "例えば次のコマンドを使用できる　※aml-resourcesという名前のリソースグループが既に作成されていることを前提としてる\n",
+        "\n",
+        "```\n",
+        "az ml workspace create -w 'aml-workspace' -g 'aml-resources'\n",
+        "```\n",
+        "\n",
+        "- Azure Resource Managerテンプレートを使用する。"
+      ],
+      "metadata": {},
+      "id": "99abdde7-36ff-4133-95a3-8f5279ab79ce"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# 演習 - ワークスペースを作成する\n",
+        "\n",
+        "1. Azureポータルで、新しいMLリソースを作成する。\n",
+        "\n",
+        "    - サブスクリプション\n",
+        "    - リソースグループ\n",
+        "    - ワークスペース名\n",
+        "    - リージョン\n",
+        "    - ストレージアカウント\n",
+        "    - Key vault\n",
+        "    - アプリケーション insights\n",
+        "    - コンテナーレジストリ\n",
+        "\n",
+        "![image.png](attachment:c495cc31-10bb-4f0d-872e-a1e2d094a096.png)\n",
+        "\n",
+        "※注:Azure MLワークスペースを作成する際には、高度なオプションを使用してプライベートエンドポイントを介したアクセスを制御したり、  \n",
+        "データ暗号化のカスタムキーを指定したりすることができる。\n",
+        "\n",
+        "2. ワークスペースとその関連リソースが作成されたら、ポータルでワークスペースを表示する。"
+      ],
+      "metadata": {},
+      "id": "87db5fb8-3a4f-4a21-9533-1c1c7bdf5573"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## Azure ML Studioを見る\n",
+        "\n",
+        "Azure MLスタジオでは、ワークスペースを操作するための専用Webポータルを提供している。  \n",
+        "スタジオを起動することで、Azure MLスタジオへ移動することができる。\n",
+        "\n",
+        "![image.png](attachment:173e5b4c-7fd6-4cff-914c-8fcb56792270.png)\n",
+        "\n",
+        "以下のページを使って、ワークスペースのリソースを管理することができる。\n",
+        "\n",
+        "![image.png](attachment:a5b4c642-5937-4e5d-b1cc-4236e8efb732.png)"
+      ],
+      "metadata": {},
+      "id": "81a1d6ed-fa48-4de8-8b19-f399ba67b027"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## コンピューティングインスタンスの作成\n",
+        "\n",
+        "Azure MLのメリットの一つは、実験やトレーニングスクリプトを大規模に実行できるクラウドベースのコンピューティングを作成できること。\n",
+        "\n",
+        "![image.png](attachment:56c1da4c-29c0-4267-ae7c-eeb18ee19915.png)\n",
+        "\n",
+        "1. **コンピューティング**を表示する。  \n",
+        "ここでは、データサイエンス活動のためのコンピューティングリソースを管理する。作成できるリソースは4種類\n",
+        "\n",
+        "    - **コンピューティングインスタンス**\n",
+        "        - データサイエンティストがデータやモデルを扱うために使用する開発ワークステーション\n",
+        "    - **コンピューティングクラスター**\n",
+        "        - 実行コードをオンデマンドに処理するためのスケーラブルな仮想マシンのクラスター\n",
+        "    - **推論クラスター**\n",
+        "        - 訓練されたモデルを使用する予測サービスの導入対象\n",
+        "    - **アタッチされたコンピューティング**\n",
+        "        - 他のAzureコンピューティングリソースへのリンク  \n",
+        "        Virtual MachineやAzure Databricksクラスターなど、他のAzureコンピューティングへのリンク\n",
+        "\n",
+        "2. コンピューティングインスタンスより、新しいコンピューティングインスタンスを追加する。  \n",
+        "このインスタンスは、ノートブックでコードを実行するためのワークステーションとして使用する。\n",
+        "\n",
+        "![image.png](attachment:c7ab5592-8adb-418b-8bb3-83003a71067b.png)\n",
+        "\n",
+        "3. コンピューティングが作成されるまで待つ。\n"
+      ],
+      "metadata": {},
+      "id": "1fa43f1a-4118-4388-869f-3ed5d3dde8dc"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## ノートブックのクローンおよび実行\n",
+        "\n",
+        "データサイエンスや機械学習の実験の多くは、ノートブックでコードを実行することで行われる。  \n",
+        "あなたのコンピューティングインスタンスには、広範な作業に使用できる全機能のPythonノートブック環境が含まれているが、  \n",
+        "基本的なノートブックの編集には、Azure MLスタジオの組み込みノートブックページを使用できる。\n",
+        "\n",
+        "1. Azure MLスタジオで**Notebooks**を開く\n",
+        "\n",
+        "![image.png](attachment:09a8a9bb-1706-4af1-b662-dfb2c3c8dca4.png)\n",
+        "\n",
+        "2. ターミナルを開き、`git`コマンドでノートブックのクローンを取得する\n",
+        "\n",
+        "![image.png](attachment:59a8a356-5dd8-487d-ae57-ba0ff1f808a0.png)\n",
+        "\n",
+        "3. ターミナルを閉じ、ファイルペイン上で更新してからノートブックを選択することで、ノートブックを開くことができる。\n",
+        "\n",
+        "![image.png](attachment:80a107b1-25cd-47b1-920e-b76e44865517.png)"
+      ],
+      "metadata": {},
+      "id": "dc5fb47c-8970-4459-83df-b13ac69966e6"
+    },
+    {
+      "cell_type": "markdown",
+      "source": [],
+      "metadata": {},
+      "id": "6c640909-bf9d-46b3-ba1c-a7525f72d758"
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "name": "python3",
+      "language": "python",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python",
+      "version": "3.6.9",
+      "mimetype": "text/x-python",
+      "codemirror_mode": {
+        "name": "ipython",
+        "version": 3
+      },
+      "pygments_lexer": "ipython3",
+      "nbconvert_exporter": "python",
+      "file_extension": ".py"
+    },
+    "kernel_info": {
+      "name": "python3"
+    },
+    "nteract": {
+      "version": "nteract-front-end@1.0.0"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}
